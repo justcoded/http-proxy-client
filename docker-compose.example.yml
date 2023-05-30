@@ -1,0 +1,28 @@
+version: "3.7"
+
+x-php-defaults: &php-defaults
+  #build: ./build/php-fpm
+  image: hub.jcdev.net:24000/php8.2-fpm-buster:8.2.3
+  cap_add:
+    - SYS_PTRACE
+  security_opt:
+    - apparmor:unconfined
+  volumes:
+    - ./build/php-ini-${PHP_INI_TEMPLATE}.ini:/usr/local/etc/php/conf.d/zz-force-conf.ini
+    - ./build/php-fpm.conf:/usr/local/etc/php-fpm.d/zz-www.conf
+    - ./src:/var/www/html
+    - ~/.composer-cache/:/root/.composer/cache
+  environment: &php-env-defaults
+    PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+
+services:
+  app:
+    <<: *php-defaults
+    environment:
+      <<: *php-env-defaults
+      FOREGROUND_PROCESS: php-fpm
+      CONTAINER_ENABLED: 1
+      PHP_INI_TEMPLATE: ${PHP_INI_TEMPLATE}
+      PHP_XDEBUG_ENABLED: ${PHP_XDEBUG_ENABLED}
+      XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
