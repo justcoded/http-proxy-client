@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Sockets;
 
-class Client
+class PusherApi
 {
     public function __construct(
         protected WebSocket $connection,

@@ -6,8 +6,8 @@ namespace App\Commands;
 
 use App\Commands\Concerns\ForwardsProxyWebhooks;
 use App\Commands\Concerns\ListensProxySocket;
-use App\Sockets\Client;
 use App\Sockets\Concerns\InteractsWithSockets;
+use App\Sockets\PusherApi;
 use App\Sockets\WebSocket;
 use Illuminate\Console\Command;
 use React\EventLoop\LoopInterface;
@@ -38,16 +38,20 @@ class ProxyCommand extends Command
         $this
             ->connect($this->whpSocketUrl())
             ->then(function (WebSocket $connection) use ($channelUuid, $forwardUrl) {
-                $client = new Client($connection);
+                $pusher = new PusherApi($connection);
                 $channel = rtrim(config('whp.socket.channel_basename'), '.') . '.' . $channelUuid;
-                $client->subscribe($channel);
+
+                $pusher->subscribe($channel);
 
                 $connection->on('error', $this->onError());
                 $connection->on('close', $this->onClose());
 
                 $connection->on('message', $this->onMessage($forwardUrl));
 
-                $this->loop->addPeriodicTimer(1, static fn() => $client->ping($channel));
+                $this->loop->addPeriodicTimer(
+                    max(config('whp.socket.timeout') - 1, 1),
+                    static fn() => $pusher->ping($channel),
+                );
             }, function (Throwable $e) {
                 $this->error('Could not connect: ' . $e->getMessage());
             });

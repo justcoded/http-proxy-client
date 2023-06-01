@@ -34,7 +34,7 @@ endif
 
 DOCKER_COMPOSE_EXEC = docker-compose exec ${DOCKER_T_FLAG} --privileged
 DOCKER_COMPOSE_EXEC_WWW = ${DOCKER_COMPOSE_EXEC} -w /var/www/html
-DOCKER_COMPOSE_RUN = docker-compose run --rm ${DOCKER_T_FLAG} -w /var/www/html
+DOCKER_COMPOSE_RUN = docker-compose run -it --rm ${DOCKER_T_FLAG}
 
 CONV_CHL_IMAGE := justcoded/php-conventional-changelog:latest
 CONV_CHL_DR := docker run -it --rm --volume "$$PWD":/codebase ${CONV_CHL_IMAGE} bash
@@ -75,7 +75,7 @@ build:
 	docker-compose build
 
 run: xdebug-init
-	${DOCKER_COMPOSE_RUN} app bash -c "./whp --channel-uuid=$(channel) --forward-url=$(url)"
+	${DOCKER_COMPOSE_RUN} app bash -c "/var/www/html/whp --channel-uuid=$(channel) --forward-url=$(url)"
 
 xdebug-init:
 	@if [ $$USER = 'vagrant' ]; then \

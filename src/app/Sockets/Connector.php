@@ -34,7 +34,7 @@ class Connector
         protected ?ConnectorInterface $connector = null,
     ) {
         $this->connector ??= new ReactConnector([
-            'timeout' => 20,
+            'timeout' => config('whp.socket.timeout', 20),
         ], $this->loop);
 
         $this->negotiator = new ClientNegotiator();
@@ -120,7 +120,7 @@ class Connector
 
                     $futureWsConn->resolve(new WebSocket($stream, $response, $request));
 
-                    $futureWsConn->promise()->then(function (WebSocket $conn) use ($stream) {
+                    $futureWsConn->promise()->then(static function (WebSocket $conn) use ($stream) {
                         $stream->emit('data', [$conn->response->getBody(), $stream]);
                     });
                 };
