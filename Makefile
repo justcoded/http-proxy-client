@@ -50,6 +50,10 @@ init:
 		echo 'Copying .env file...'; \
 		${MAYBE_SUDO} cp .env.example .env; \
 	fi;
+	@if [ ! -f 'src/.env' ]; then \
+		echo 'Copying src/.env file...'; \
+		${MAYBE_SUDO} cp src/.env.example src/.env; \
+	fi;
 	@if [ ! -f 'docker-compose.yml' ]; then \
 		echo 'Copying docker-compose.yml file...'; \
 		${MAYBE_SUDO} cp docker-compose.example.yml docker-compose.yml; \
