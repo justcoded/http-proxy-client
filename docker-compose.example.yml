@@ -26,3 +26,4 @@ services:
       PHP_XDEBUG_ENABLED: ${PHP_XDEBUG_ENABLED}
       XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
       PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+    network_mode: "host"
