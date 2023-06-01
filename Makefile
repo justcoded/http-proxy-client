@@ -32,7 +32,7 @@ ifeq "$(NON_INTERACTIVE)" "1"
     DOCKER_T_FLAG = -T
 endif
 
-DOCKER_COMPOSE_EXEC = docker-compose exec ${DOCKER_T_FLAG} --privileged --index=
+DOCKER_COMPOSE_EXEC = docker-compose exec ${DOCKER_T_FLAG} --privileged
 DOCKER_COMPOSE_EXEC_WWW = ${DOCKER_COMPOSE_EXEC} -w /var/www/html
 DOCKER_COMPOSE_RUN = docker-compose run --rm ${DOCKER_T_FLAG} -w /var/www/html
 
