@@ -21,8 +21,7 @@ class ProxyCommand extends Command
 
     public function __construct(
         protected LoopInterface $loop,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
