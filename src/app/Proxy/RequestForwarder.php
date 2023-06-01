@@ -14,11 +14,15 @@ use Symfony\Component\Translation\Exception\ProviderException;
 
 class RequestForwarder
 {
-    protected Payload $payload;
+    protected RequestData $payload;
 
     public function __construct(object $request)
     {
-        $this->payload = new Payload($request->method, $request->body, (array)$request->headers);
+        $this->payload = new RequestData(
+            $request->method,
+            $request->body,
+            (array) $request->headers
+        );
     }
 
     public static function make(object $request): static

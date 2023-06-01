@@ -21,7 +21,8 @@ class ProxyCommand extends Command
 
     public function __construct(
         protected LoopInterface $loop,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -32,13 +33,8 @@ class ProxyCommand extends Command
 
     public function handle(): void
     {
-        if (!$channelUuid = $this->option('channel-uuid')) {
-            $channelUuid = $this->ask('Enter the channel UUID:');
-        }
-
-        if (!$forwardUrl = $this->option('forward-url')) {
-            $forwardUrl = $this->ask('Enter the URL to forward to:');
-        }
+        $channelUuid = $this->option('channel-uuid') ?? $this->ask('Enter the channel UUID:');
+        $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
 
         $this
             ->connect($this->whpSocketUrl())

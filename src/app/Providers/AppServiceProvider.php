@@ -10,8 +10,6 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(LoopInterface::class, function () {
-            return Loop::get();
-        });
+        $this->app->singleton(LoopInterface::class, fn() => Loop::get());
     }
 }

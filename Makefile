@@ -14,9 +14,7 @@ info:
 	@echo "Available commands:"
 	@echo "	init	 		Init configurations"
 	@echo "	build	 		Build images"
-	@echo "	test-run		Docker run in place"
-	@echo "	run|up	 		Docker run as daemon"
-	@echo "	stop|down			Docker stop"
+	@echo "	run channel={channel-uuid} url={forward-url}	 			Run the application in the docker container"
 	@echo "	install	 		Run install process (php and nodejs)"
 	@echo "	update	 		Run install process (php and nodejs)"
 	@echo "	chown	 		Return back correct file owner for files created inside a container"
@@ -34,9 +32,9 @@ ifeq "$(NON_INTERACTIVE)" "1"
     DOCKER_T_FLAG = -T
 endif
 
-DOCKER_COMPOSE_EXEC = docker-compose exec ${DOCKER_T_FLAG} --privileged --index=1
+DOCKER_COMPOSE_EXEC = docker-compose exec ${DOCKER_T_FLAG} --privileged --index=
 DOCKER_COMPOSE_EXEC_WWW = ${DOCKER_COMPOSE_EXEC} -w /var/www/html
-DOCKER_COMPOSE_RUN = docker-compose run ${DOCKER_T_FLAG} -w /var/www/html
+DOCKER_COMPOSE_RUN = docker-compose run --rm ${DOCKER_T_FLAG} -w /var/www/html
 
 CONV_CHL_IMAGE := justcoded/php-conventional-changelog:latest
 CONV_CHL_DR := docker run -it --rm --volume "$$PWD":/codebase ${CONV_CHL_IMAGE} bash
@@ -67,21 +65,17 @@ init:
 	@echo 'NOTE: Please check your configuration in "docker-compose.yml" before run.'
 	@echo ''
 
-install: build run
+install: build
 	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make install"
 
-update: stop run
+update:
 	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "make update"
 
 build:
 	docker-compose build
 
-up: run
 run: xdebug-init
-	docker-compose up --force-recreate -d
-
-test-run: xdebug-init
-	docker-compose up --force-recreate
+	${DOCKER_COMPOSE_RUN} app bash -c "./whp --channel-uuid=$(channel) --forward-url=$(url)"
 
 xdebug-init:
 	@if [ $$USER = 'vagrant' ]; then \
@@ -93,15 +87,8 @@ xdebug-init:
 test:
 	@echo 'dummy test'
 
-down: stop
-stop:
-	docker-compose down
-
 chown:
 	sudo chown -R $$(whoami) .env docker-compose.* build/ src/
-
-php-bash:
-	${DOCKER_COMPOSE_EXEC_WWW} app bash
 
 ##
 # @command chl 	Generate changelog based on conventional commits

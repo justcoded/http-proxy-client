@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands\Concerns;
 
-use App\Proxy\Payload;
+use App\Proxy\RequestData;
 use App\Proxy\RequestForwarder;
 use Carbon\Carbon;
 use Ratchet\RFC6455\Messaging\Message;
@@ -28,10 +28,10 @@ trait ForwardsProxyWebhooks
             $this->line(str_repeat('.', 30) . '(new webhook)'); // main delimiter
             $this->line('');
 
-            $payload = Payload::fromRaw($data->request);
+            $requestData = RequestData::fromRaw($data->request);
             $this->line('Request received: ' . Carbon::now()->setTimezone(date_default_timezone_get())->toDateTimeString());
-            $this->line("Request origin: {$payload->method} {$payload->headers['host']}");
-            $this->line("Payload: {$payload->body()}");
+            $this->line("Request origin: {$requestData->method} {$requestData->headers['host']}");
+            $this->line("Payload: {$requestData->body()}");
 
             $this->line(str_repeat('_', 15)); // request/response delimiter
 

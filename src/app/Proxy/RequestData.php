@@ -7,32 +7,32 @@ namespace App\Proxy;
 use GuzzleHttp\Psr7\Request;
 use stdClass;
 
-class Payload
+class RequestData
 {
     public readonly array $headers;
 
     public function __construct(
-        public readonly string        $method,
+        public readonly string $method,
         protected array|object|string $body,
-        array|stdClass                $headers,
+        array|stdClass $headers,
     ) {
         $this->headers = static::normalizeHeaders($headers);
     }
 
     public static function fromRaw(array|stdClass $request): static
     {
-        $request = (array)$request;
+        $request = (array) $request;
 
         return new static(
             $request['method'],
             $request['body'],
-            static::normalizeHeaders($request['headers']),
+            $request['headers'],
         );
     }
 
     protected static function normalizeHeaders(array|stdClass $headers): array
     {
-        $headers = (array)$headers;
+        $headers = (array) $headers;
 
         return array_map(fn($header) => is_array($header) ? $header[0] : $header, $headers);
     }

@@ -17,6 +17,11 @@ use Ratchet\RFC6455\Messaging\MessageInterface;
 use React\Socket\ConnectionInterface;
 use UnderflowException;
 
+/**
+ * @copyright RatchetPHP https://github.com/ratchetphp
+ * @version 0.4.1
+ * @see https://github.com/ratchetphp/Pawl/blob/v0.4.1/src/WebSocket.php
+ */
 class WebSocket implements EventEmitterInterface
 {
     use EventEmitterTrait;

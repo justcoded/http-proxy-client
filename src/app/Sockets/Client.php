@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Sockets;
 
-use Ratchet\RFC6455\Messaging\Frame;
-
 class Client
 {
     public function __construct(
@@ -40,11 +38,14 @@ class Client
         ]));
     }
 
-    public function ping(): bool
+    public function ping(string $channel): bool
     {
-        $frame = new Frame(payload: 'ping', opcode: Frame::OP_PING);
-        $frame->maskPayload();
-
-        return $this->connection->send($frame->getContents());
+        return $this->connection->send(json_encode([
+            'event' => 'pusher:ping',
+            'data' => [
+                'auth' => $this->auth,
+                'channel' => $channel,
+            ],
+        ]));
     }
 }
