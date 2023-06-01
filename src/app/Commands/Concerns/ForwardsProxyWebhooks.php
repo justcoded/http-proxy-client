@@ -15,12 +15,16 @@ trait ForwardsProxyWebhooks
     {
         return function (Message $message) use ($forwardUrl) {
             $msg = json_decode($message->getPayload());
-            if (!$msg->event) {
+            if (! $msg->event) {
                 return;
             }
 
-            $data = isset($msg->data) ? json_decode($msg->data) : null;
-            if (!isset($data->request)) {
+            $data = null;
+            if (isset($msg->data)) {
+                $data = is_string($msg->data) ? json_decode($msg->data) : $msg->data;
+            }
+
+            if (! $data || ! isset($data->request)) {
                 return;
             }
 
@@ -29,7 +33,9 @@ trait ForwardsProxyWebhooks
             $this->line('');
 
             $requestData = RequestData::fromRaw($data->request);
-            $this->line('Request received: ' . Carbon::now()->setTimezone(date_default_timezone_get())->toDateTimeString());
+            $this->line('Request received: ' . Carbon::now()
+                    ->setTimezone(date_default_timezone_get())
+                    ->toDateTimeString());
             $this->line("Request origin: {$requestData->method} {$requestData->headers['host']}");
             $this->line("Payload: {$requestData->body()}");
 

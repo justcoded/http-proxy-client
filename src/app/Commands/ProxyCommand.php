@@ -46,6 +46,8 @@ class ProxyCommand extends Command
                 $connection->on('close', $this->onClose());
 
                 $connection->on('message', $this->onMessage($forwardUrl));
+
+                $this->loop->addPeriodicTimer(1, static fn() => $client->ping($channel));
             }, function (Throwable $e) {
                 $this->error('Could not connect: ' . $e->getMessage());
             });
