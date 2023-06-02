@@ -9,6 +9,7 @@ use App\Commands\Concerns\ListensProxySocket;
 use App\Sockets\Concerns\InteractsWithSockets;
 use App\Sockets\PusherApi;
 use App\Sockets\WebSocket;
+use App\View\View;
 use Illuminate\Console\Command;
 use React\EventLoop\LoopInterface;
 use Throwable;
@@ -34,6 +35,8 @@ class ProxyCommand extends Command
     {
         $channelUuid = $this->option('channel-uuid') ?? $this->ask('Enter the channel UUID:');
         $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+
+        View::render('command.proxy.start', compact('channelUuid', 'forwardUrl'));
 
         $this
             ->connect($this->whpSocketUrl())
