@@ -76,8 +76,8 @@ class WebhookProxy
     {
         $scheme = $secure ? 'wss' : 'ws';
         $port = config('whp.socket.port');
-        $appId = config('whp.socket.app_id');
+        $appKey = config('whp.socket.app_key');
 
-        return "{$scheme}://{$this->host}:{$port}/app/{$appId}?protocol=7&client=js&version=4.4.0&flash=false";
+        return "{$scheme}://{$this->host}:{$port}/app/{$appKey}?protocol=7&client=js&version=4.4.0&flash=false";
     }
 }
