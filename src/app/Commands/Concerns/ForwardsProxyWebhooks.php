@@ -44,7 +44,7 @@ trait ForwardsProxyWebhooks
 
             $requestUrl = app(WebhookProxy::class)->requestUrl(
                 $data->request->channel_id,
-                $data->request->id
+                $data->request->id,
             );
 
             View::render('command.proxy.webhook', [

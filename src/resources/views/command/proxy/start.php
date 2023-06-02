@@ -4,6 +4,7 @@
  * @var string $webhookUrl
  * @var string $forwardUrl
  */
+
 ?>
 
 <div class="m-1">
@@ -14,7 +15,7 @@
     <dl>
         <dt>Channel UUID:</dt>
         <dd><?= $channelUuid ?></dd>
-        <dt>Webhook URL: </dt>
+        <dt>Webhook URL:</dt>
         <dd><?= $webhookUrl ?></dd>
         <dt>Forward URL:</dt>
         <dd><?= $forwardUrl ?></dd>

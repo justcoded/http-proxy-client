@@ -21,7 +21,7 @@ class WebhookProxy
 
     public function baseUrl(): string
     {
-        if (!$this->scheme) {
+        if (! $this->scheme) {
             $secure = config('whp.secure');
             $this->scheme = $secure ? 'https' : 'http';
         }
@@ -33,8 +33,9 @@ class WebhookProxy
 
     public function parseChannelUuid(string $channelIdentifier): string
     {
-        if (!Str::startsWith($channelIdentifier, 'http')) {
+        if (! Str::startsWith($channelIdentifier, 'http')) {
             $this->ensureValidUuid($channelIdentifier);
+
             return $channelIdentifier;
         }
 
@@ -51,7 +52,7 @@ class WebhookProxy
     protected function ensureValidUuid(string $channelUuid): void
     {
         $uuidRegex = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
-        if (!preg_match($uuidRegex, $channelUuid)) {
+        if (! preg_match($uuidRegex, $channelUuid)) {
             throw new InvalidArgumentException('Invalid channel UUID provided.');
         }
     }

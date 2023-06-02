@@ -14,9 +14,7 @@ use App\View\View;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use React\EventLoop\LoopInterface;
-use RuntimeException;
 use Throwable;
-use function Termwind\render;
 
 class ProxyCommand extends Command
 {

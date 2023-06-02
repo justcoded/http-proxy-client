@@ -21,7 +21,7 @@ class RequestForwarder
         $this->payload = new RequestData(
             $request->method,
             $request->body,
-            (array)$request->headers
+            (array) $request->headers
         );
     }
 

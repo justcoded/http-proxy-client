@@ -9,7 +9,6 @@
 
 use App\Proxy\RequestData;
 use Carbon\CarbonInterface;
-use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 
 $errorResponse = $response->getStatusCode() >= 400;
@@ -28,7 +27,8 @@ $errorResponse = $response->getStatusCode() >= 400;
     <tr>
         <td><?= $requestData->method ?> <?= $requestData->headers['host'] ?></td>
         <td><?= $forwardedInSeconds ?></td>
-        <td><?= $response->getStatusCode() ?> <?= $response->getReasonPhrase() ?></td>4
+        <td><?= $response->getStatusCode() ?> <?= $response->getReasonPhrase() ?></td>
+        4
         <td>
             <a href="<?= $requestUrl ?>">
                 <?= $requestUrl ?>
