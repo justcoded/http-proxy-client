@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'WebhookProxyClient',
+    'name' => env('APP_NAME', 'Webhook Proxy Client'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,5 +69,7 @@ return [
     'providers' => [
         App\Providers\AppServiceProvider::class,
     ],
+
+    'max_output_line_chars' => env('APP_MAX_OUTPUT_LINE_CHARS', 80),
 
 ];

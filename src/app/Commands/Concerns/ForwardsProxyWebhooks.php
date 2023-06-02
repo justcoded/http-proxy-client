@@ -6,6 +6,8 @@ namespace App\Commands\Concerns;
 
 use App\Proxy\RequestData;
 use App\Proxy\RequestForwarder;
+use App\Util\WebhookProxy;
+use App\View\View;
 use Carbon\Carbon;
 use Ratchet\RFC6455\Messaging\Message;
 use function Termwind\render;
@@ -29,35 +31,29 @@ trait ForwardsProxyWebhooks
                 return;
             }
 
-            render('<hr>'); // main delimiter
+            render('<hr>');
+
+            $tz = config('app.timezone');
+            $timestamp = Carbon::now()->setTimezone($tz)->toDateTimeString();
+            render("<h2 class='font-bold italic text-center text-lime-500'>Webhook received: {$timestamp} ({$tz})</h2>");
 
             $requestData = RequestData::fromRaw($data->request);
-
-            render(<<<HTML
-                <dl>
-                  <dt>Request origin: </dt>
-                  <dd>{$requestData->method} {$requestData->headers['host']}</dd>
-                  <dt>Payload: </dt>
-                  <dd>{$requestData->body()}</dd>
-                </dl>
-            HTML);
-
             $start = microtime(true);
             $response = RequestForwarder::make($data->request)->forward($forwardUrl);
             $forwardedInSeconds = round(microtime(true) - $start, 3) . 's';
 
-            $body = $response->getBody()->getContents() ?: '(empty)';
+            $requestUrl = app(WebhookProxy::class)->requestUrl(
+                $data->request->channel_id,
+                $data->request->id
+            );
 
-            render(<<<HTML
-                <dl>
-                    <dt>Response: </dt>
-                    <dd>{$response->getStatusCode()} {$response->getReasonPhrase()}</dd>
-                    <dt>Response time: </dt>
-                    <dd>{$forwardedInSeconds}</dd>
-                    <dt>Response payload: </dt>
-                    <dd>{$body}</dd>
-                </dl>
-            HTML);
+            View::render('command.proxy.webhook', [
+                'timestamp' => $timestamp,
+                'requestData' => $requestData,
+                'response' => $response,
+                'forwardedInSeconds' => $forwardedInSeconds,
+                'requestUrl' => $requestUrl,
+            ]);
         };
     }
 }

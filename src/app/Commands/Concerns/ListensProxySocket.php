@@ -8,16 +8,6 @@ use Throwable;
 
 trait ListensProxySocket
 {
-    protected function whpSocketUrl(): string
-    {
-        $scheme = config('whp.socket.secure') ? 'wss' : 'ws';
-        $host = config('whp.socket.host');
-        $port = config('whp.socket.port');
-        $socketId = config('whp.socket.app_id');
-
-        return "{$scheme}://{$host}:{$port}/app/{$socketId}?protocol=7&client=js&version=4.4.0&flash=false";
-    }
-
     protected function onError(): callable
     {
         return function (Throwable $error) {

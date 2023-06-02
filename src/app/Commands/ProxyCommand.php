@@ -9,8 +9,11 @@ use App\Commands\Concerns\ListensProxySocket;
 use App\Sockets\Concerns\InteractsWithSockets;
 use App\Sockets\PusherApi;
 use App\Sockets\WebSocket;
+use App\Util\WebhookProxy;
+use App\View\View;
 use Illuminate\Console\Command;
 use React\EventLoop\LoopInterface;
+use RuntimeException;
 use Throwable;
 use function Termwind\render;
 
@@ -18,10 +21,11 @@ class ProxyCommand extends Command
 {
     use InteractsWithSockets, ListensProxySocket, ForwardsProxyWebhooks;
 
-    protected $signature = 'proxy {--channel-uuid=} {--forward-url=}';
+    protected $signature = 'proxy {--channel=} {--forward-url=}';
 
     public function __construct(
         protected LoopInterface $loop,
+        protected WebhookProxy $webhookProxy,
     ) {
         parent::__construct();
     }
@@ -33,24 +37,23 @@ class ProxyCommand extends Command
 
     public function handle(): void
     {
-        $channelUuid = $this->option('channel-uuid') ?? $this->ask('Enter the channel UUID:');
-        $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+        $channelIdentifier = $this->option('channel') ?? $this->ask('Enter the channel UUID or webhook URL:');
 
-        render(<<<HTML
-            <div>
-                <p class="font-bold text-center">Webhook Proxy Client</p>
-                <hr>
-                <dl>
-                  <dt>Listening channel: </dt>
-                  <dd>{$channelUuid}</dd>
-                  <dt>Forward URL: </dt>
-                  <dd>{$forwardUrl}</dd>
-                </dl>
-            </div>
-        HTML);
+        try {
+            $channelUuid = $this->webhookProxy->parseChannelUuid($channelIdentifier);
+        } catch (RuntimeException $e) {
+            $this->error($e->getMessage());
+
+            return;
+        }
+
+        $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+        $webhookUrl = $this->webhookProxy->webhookUrl($channelUuid);
+
+        View::render('command.proxy.start', compact('channelUuid', 'forwardUrl', 'webhookUrl'));
 
         $this
-            ->connect($this->whpSocketUrl())
+            ->connect($this->webhookProxy->websocketUrl())
             ->then(function (WebSocket $connection) use ($channelUuid, $forwardUrl) {
                 $pusher = new PusherApi($connection);
                 $channel = rtrim(config('whp.socket.channel_basename'), '.') . '.' . $channelUuid;
