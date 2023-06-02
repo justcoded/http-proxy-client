@@ -12,6 +12,7 @@ use App\Sockets\WebSocket;
 use Illuminate\Console\Command;
 use React\EventLoop\LoopInterface;
 use Throwable;
+use function Termwind\render;
 
 class ProxyCommand extends Command
 {
@@ -34,6 +35,19 @@ class ProxyCommand extends Command
     {
         $channelUuid = $this->option('channel-uuid') ?? $this->ask('Enter the channel UUID:');
         $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+
+        render(<<<HTML
+            <div>
+                <p class="font-bold text-center">Webhook Proxy Client</p>
+                <hr>
+                <dl>
+                  <dt>Listening channel: </dt>
+                  <dd>{$channelUuid}</dd>
+                  <dt>Forward URL: </dt>
+                  <dd>{$forwardUrl}</dd>
+                </dl>
+            </div>
+        HTML);
 
         $this
             ->connect($this->whpSocketUrl())

@@ -8,6 +8,7 @@ use App\Proxy\RequestData;
 use App\Proxy\RequestForwarder;
 use Carbon\Carbon;
 use Ratchet\RFC6455\Messaging\Message;
+use function Termwind\render;
 
 trait ForwardsProxyWebhooks
 {
@@ -28,30 +29,35 @@ trait ForwardsProxyWebhooks
                 return;
             }
 
-            $this->line('');
-            $this->line(str_repeat('.', 30) . '(new webhook)'); // main delimiter
-            $this->line('');
+            render('<hr>'); // main delimiter
 
             $requestData = RequestData::fromRaw($data->request);
-            $this->line('Request received: ' . Carbon::now()
-                    ->setTimezone(date_default_timezone_get())
-                    ->toDateTimeString());
-            $this->line("Request origin: {$requestData->method} {$requestData->headers['host']}");
-            $this->line("Payload: {$requestData->body()}");
 
-            $this->line(str_repeat('_', 15)); // request/response delimiter
+            render(<<<HTML
+                <dl>
+                  <dt>Request origin: </dt>
+                  <dd>{$requestData->method} {$requestData->headers['host']}</dd>
+                  <dt>Payload: </dt>
+                  <dd>{$requestData->body()}</dd>
+                </dl>
+            HTML);
 
             $start = microtime(true);
             $response = RequestForwarder::make($data->request)->forward($forwardUrl);
-            $this->line('Forwarded in ' . round(microtime(true) - $start, 3) . 's');
+            $forwardedInSeconds = round(microtime(true) - $start, 3) . 's';
 
-            $body = $response->getBody()->getContents();
-            if (empty($body)) {
-                $body = '(empty)';
-            }
+            $body = $response->getBody()->getContents() ?: '(empty)';
 
-            $this->line("Response: {$response->getStatusCode()} {$response->getReasonPhrase()}");
-            $this->line("Body: {$body}");
+            render(<<<HTML
+                <dl>
+                    <dt>Response: </dt>
+                    <dd>{$response->getStatusCode()} {$response->getReasonPhrase()}</dd>
+                    <dt>Response time: </dt>
+                    <dd>{$forwardedInSeconds}</dd>
+                    <dt>Response payload: </dt>
+                    <dd>{$body}</dd>
+                </dl>
+            HTML);
         };
     }
 }
