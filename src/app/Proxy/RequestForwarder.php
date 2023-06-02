@@ -21,7 +21,7 @@ class RequestForwarder
         $this->payload = new RequestData(
             $request->method,
             $request->body,
-            (array) $request->headers
+            (array)$request->headers
         );
     }
 
@@ -37,7 +37,7 @@ class RequestForwarder
         try {
             return $client->send($this->payload->toRequest($url));
         } catch (RequestException|ProviderException|BadResponseException $e) {
-            return $e->getResponse();
+            return $e->getResponse() ?? new Response(status: 500, body: $e->getMessage());
         } catch (GuzzleException $e) {
             return new Response(status: 500, body: $e->getMessage());
         }

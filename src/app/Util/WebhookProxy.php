@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Util;
 
 use Illuminate\Support\Str;
-use RuntimeException;
+use InvalidArgumentException;
 
 class WebhookProxy
 {
@@ -21,7 +21,7 @@ class WebhookProxy
 
     public function baseUrl(): string
     {
-        if (! $this->scheme) {
+        if (!$this->scheme) {
             $secure = config('whp.secure');
             $this->scheme = $secure ? 'https' : 'http';
         }
@@ -33,7 +33,7 @@ class WebhookProxy
 
     public function parseChannelUuid(string $channelIdentifier): string
     {
-        if (! Str::startsWith($channelIdentifier, 'http')) {
+        if (!Str::startsWith($channelIdentifier, 'http')) {
             $this->ensureValidUuid($channelIdentifier);
             return $channelIdentifier;
         }
@@ -51,8 +51,8 @@ class WebhookProxy
     protected function ensureValidUuid(string $channelUuid): void
     {
         $uuidRegex = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
-        if (! preg_match($uuidRegex, $channelUuid)) {
-            throw new RuntimeException('Invalid channel UUID provided.');
+        if (!preg_match($uuidRegex, $channelUuid)) {
+            throw new InvalidArgumentException('Invalid channel UUID provided.');
         }
     }
 
@@ -71,9 +71,9 @@ class WebhookProxy
         return $this->baseUrl() . "/ch/{$channelUuid}";
     }
 
-    public function websocketUrl(): string
+    public function websocketUrl(bool $secure = true): string
     {
-        $scheme = config('whp.socket.secure') ? 'wss' : 'ws';
+        $scheme = $secure ? 'wss' : 'ws';
         $port = config('whp.socket.port');
         $appId = config('whp.socket.app_id');
 

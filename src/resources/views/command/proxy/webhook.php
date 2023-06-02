@@ -9,8 +9,10 @@
 
 use App\Proxy\RequestData;
 use Carbon\CarbonInterface;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 
+$errorResponse = $response->getStatusCode() >= 400;
 ?>
 
 <table class="mt-1">
@@ -26,12 +28,19 @@ use Psr\Http\Message\ResponseInterface;
     <tr>
         <td><?= $requestData->method ?> <?= $requestData->headers['host'] ?></td>
         <td><?= $forwardedInSeconds ?></td>
-        <td><?= $response->getStatusCode() ?> <?= $response->getReasonPhrase() ?></td>
+        <td><?= $response->getStatusCode() ?> <?= $response->getReasonPhrase() ?></td>4
         <td>
-            <a href="<?=$requestUrl ?>">
-                <?=$requestUrl ?>
+            <a href="<?= $requestUrl ?>">
+                <?= $requestUrl ?>
             </a>
         </td>
     </tr>
+    <?php if ($errorResponse): ?>
+        <tr>
+            <td colspan="4">
+                <pre class="text-red-500"><?= $response->getBody() ?></pre>
+            </td>
+        </tr>
+    <?php endif; ?>
     </tbody>
 </table>
