@@ -18,9 +18,15 @@ class RequestForwarder
 
     public function __construct(object $request)
     {
+       $contentType = $request->headers->{'content-type'}[0] ?? 'application/json';
+
+        $body = str_contains($contentType, 'text') && isset($request->body->raw)
+            ? $request->body->raw
+            : $request->body;
+
         $this->payload = new RequestData(
             $request->method,
-            $request->body,
+            $body,
             (array) $request->headers
         );
     }
