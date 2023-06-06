@@ -11,21 +11,19 @@ class WebhookProxy
 {
     protected string $host;
     protected string $scheme = '';
+    protected bool $secure;
     protected int|string|null $port = null;
 
     public function __construct()
     {
         $this->host = config('whp.host');
         $this->port = config('whp.port');
+        $this->secure = config('whp.secure');
+        $this->scheme = $this->secure ? 'https' : 'http';
     }
 
     public function baseUrl(): string
     {
-        if (! $this->scheme) {
-            $secure = config('whp.secure');
-            $this->scheme = $secure ? 'https' : 'http';
-        }
-
         $port = $this->port ? ":{$this->port}" : '';
 
         return "{$this->scheme}://{$this->host}{$port}";
@@ -72,12 +70,17 @@ class WebhookProxy
         return $this->baseUrl() . "/ch/{$channelUuid}";
     }
 
-    public function websocketUrl(bool $secure = true): string
+    public function websocketUrl(): string
     {
-        $scheme = $secure ? 'wss' : 'ws';
-        $port = config('whp.socket.port');
+        $scheme = $this->secure ? 'wss' : 'ws';
+        $port = $this->port ? ":{$this->port}" : '';
         $appKey = config('whp.socket.app_key');
 
-        return "{$scheme}://{$this->host}:{$port}/app/{$appKey}?protocol=7&client=js&version=4.4.0&flash=false";
+        $protocol = config('whp.socket.protocol');
+        $client = config('whp.socket.client');
+        $version = config('whp.socket.version');
+        $flash = config('whp.socket.flash');
+
+        return "{$scheme}://{$this->host}{$port}/app/{$appKey}?protocol={$protocol}&client={$client}&version={$version}&flash={$flash}";
     }
 }

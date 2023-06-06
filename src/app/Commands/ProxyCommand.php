@@ -20,7 +20,7 @@ class ProxyCommand extends Command
 {
     use InteractsWithSockets, ListensProxySocket, ForwardsProxyWebhooks;
 
-    protected $signature = 'proxy {--channel=} {--forward-url=} {--secure=true}';
+    protected $signature = 'proxy {--channel=} {--forward-url=}';
 
     public function __construct(
         protected LoopInterface $loop,
@@ -48,7 +48,6 @@ class ProxyCommand extends Command
 
         $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
         $webhookUrl = $this->webhookProxy->webhookUrl($channelUuid);
-        $secureSocket = $this->option('secure') === 'false' ? false : config('whp.socket.secure');
 
         if ($forwardUrl === $this->webhookProxy->webhookUrl($channelUuid)) {
             $this->error('The forward URL cannot be the same as the webhook URL.');
@@ -59,7 +58,7 @@ class ProxyCommand extends Command
         View::render('command.proxy.start', compact('channelUuid', 'forwardUrl', 'webhookUrl'));
 
         $this
-            ->connect($this->webhookProxy->websocketUrl($secureSocket))
+            ->connect($this->webhookProxy->websocketUrl())
             ->then(function (WebSocket $connection) use ($channelUuid, $forwardUrl) {
                 $pusher = new PusherApi($connection);
                 $channel = rtrim(config('whp.socket.channel_basename'), '.') . '.' . $channelUuid;
