@@ -145,7 +145,7 @@ class Connector
         $scheme = $uri->getScheme();
 
         if (! in_array($scheme, ['ws', 'wss'])) {
-            throw new InvalidArgumentException(sprintf('Cannot connect to invalid URL (%s)', $url));
+            throw new InvalidArgumentException("Cannot connect to invalid URL ({$url})");
         }
 
         $uri = $uri->withScheme('wss' === $scheme ? 'HTTPS' : 'HTTP');
