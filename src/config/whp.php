@@ -10,8 +10,8 @@ return [
         'channel_basename' => env('WHP_SOCKET_CHANNEL_BASENAME', 'App.Webhooks'),
         'self_signed_ssl' => env('WHP_SOCKET_SELF_SIGNED_SSL', false),
 
-        'protocol' => env('WHP_SOCKET_PROTOCOL', 7),
-        'client' => env('WHP_SOCKET_CLIENT', 'js'),
+        'protocol_version' => env('WHP_SOCKET_PROTOCOL_VERSION', 7),
+        'client_name' => env('WHP_SOCKET_CLIENT_NAME', 'js'),
         'version' => env('WHP_SOCKET_VERSION', '4.4.0'),
         'flash' => env('WHP_SOCKET_FLASH', 'false'),
     ],
