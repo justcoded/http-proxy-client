@@ -10,10 +10,10 @@ class View
 {
     public static function render(string $path, array $data = []): void
     {
-        render(static::renderHtml($path, $data));
+        render(static::renderView($path, $data));
     }
 
-    public static function renderHtml(string $path, array $data = []): string
+    public static function renderView(string $path, array $data = []): string
     {
         $path = base_path('resources/views/') . str_replace('.', '/', $path) . '.php';
 
@@ -24,9 +24,9 @@ class View
 
         require $path;
 
-        $html = ob_get_contents();
+        $renderedView = ob_get_contents();
         ob_get_clean();
 
-        return $html;
+        return $renderedView;
     }
 }
