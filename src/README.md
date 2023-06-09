@@ -91,7 +91,7 @@ The `.env` file itself can be edited manually either way.
 |-------------------------|-----------------------------|------------------------------------------------------------------------------------------------|
 | timezone                | APP_TIMEZONE                | Any [supported timezone](https://www.php.net/manual/en/timezones.php) string. Default is `UTC` |
 | socket.timeout          | WHP_SOCKET_TIMEOUT          | Any positive integer greater then 0. Default is `20`                                           |
-| socket.self_signed_ssl  | WHP_SOCKET_SELF_SIGNED_SSL  | `true` or `false`. Default is `false`                                                          |
+| socket.verify_ssl       | WHP_SOCKET_VERIFY_SSL       | `true` or `false`. Default is `false`                                                          |
 | socket.protocol_version | WHP_SOCKET_PROTOCOL_VERSION | Any positive integer greater then 0. Default is `7`                                            |
 | socket.client_name      | WHP_SOCKET_CLIENT_NAME      | Any string. Default is `js`                                                                    |
 | socket.version          | WHP_SOCKET_VERSION          | Any string. Default is `4.4.0`                                                                 |
@@ -108,7 +108,7 @@ $ whp customize socket.timeout 30
 ```
 
 ```bash
-$ whp customize socket.self_signed_ssl true
+$ whp customize socket.verify_ssl false
 ```
 
  ```bash

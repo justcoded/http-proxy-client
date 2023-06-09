@@ -36,8 +36,8 @@ class Connector
         $this->connector ??= new ReactConnector([
             'timeout' => config('whp.socket.timeout', 20),
             'tls' => [
-                'verify_peer' => ! config('whp.socket.self_signed_ssl', false),
-                'verify_peer_name' => ! config('whp.socket.self_signed_ssl', false),
+                'verify_peer' => config('whp.socket.verify_ssl', true),
+                'verify_peer_name' => config('whp.socket.verify_ssl', true),
             ],
         ], $this->loop);
 

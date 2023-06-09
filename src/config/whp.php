@@ -8,7 +8,7 @@ return [
         'app_key' => env('WHP_APP_KEY', 'whp_CyJUXvwTEVGxvDKg'),
         'timeout' => env('WHP_SOCKET_TIMEOUT', 20),
         'channel_basename' => env('WHP_SOCKET_CHANNEL_BASENAME', 'App.Webhooks'),
-        'self_signed_ssl' => env('WHP_SOCKET_SELF_SIGNED_SSL', false),
+        'verify_ssl' => env('WHP_SOCKET_VERIFY_SSL', true),
 
         'protocol_version' => env('WHP_SOCKET_PROTOCOL_VERSION', 7),
         'client_name' => env('WHP_SOCKET_CLIENT_NAME', 'js'),

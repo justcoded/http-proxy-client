@@ -23,7 +23,7 @@
             <td>Any valid integer</td>
         </tr>
         <tr>
-            <td>socket.self_signed_ssl</td>
+            <td>socket.verify_ssl</td>
             <td>"true" or false</td>
         </tr>
         <tr>
