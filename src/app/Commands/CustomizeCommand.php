@@ -14,7 +14,7 @@ class CustomizeCommand extends Command
 
     public function handle(): int
     {
-        $dotenvPath = base_path('.env.generated');
+        $dotenvPath = base_path('.env');
 
         //TODO: find a way to put content in the host FS, not in the phar://
         $dotenvPath = str_replace('phar://', '', $dotenvPath);
@@ -60,7 +60,7 @@ class CustomizeCommand extends Command
         return [
             'timezone' => 'app.timezone',
             'socket.timeout' => 'whp.socket.timeout',
-            'socket.self_signed_ssl' => 'whp.socket.self_signed_ssl',
+            'socket.verify_ssl' => 'whp.socket.verify_ssl',
             'socket.protocol_version' => 'whp.socket.protocol_version',
             'socket.client_name' => 'whp.socket.client_name',
             'socket.version' => 'whp.socket.version',

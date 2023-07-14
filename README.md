@@ -3,6 +3,7 @@ Webhooks Proxy Client. Powered by [Laravel Zero](https://github.com/laravel-zero
 
 BASE STRUCTURE
 -------------------
+
 ```
   build/		contains docker container config
   runtime/
@@ -15,7 +16,8 @@ INSTALLATION
 
 Project can be setup with Docker.
 
-(If you have a Mac machine - we recommend to run docker under Vagrant. See [Vagranfile and Instructions](https://bitbucket.org/snippets/justcoded/Aex4nL/))
+(If you have a Mac machine - we recommend to run docker under Vagrant.
+See [Vagranfile and Instructions](https://bitbucket.org/snippets/justcoded/Aex4nL/))
 
 1. Clone repository
 2. Navigate to your project directory
@@ -24,7 +26,7 @@ Project can be setup with Docker.
     - docker-compose.yml
 4. Check the .env file for correct configurations.
 5. Login to JC docker hub: `docker login hub.jcdev.net:24000`
-6. Run installation `make install`  
+6. Run installation `make install`
 
 ### Docker PHP Container
 
