@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'Application',
+    'name' => env('APP_NAME', 'Webhook Proxy Client'),
 
     /*
     |--------------------------------------------------------------------------
@@ -40,7 +40,7 @@ return [
     |
     */
 
-    'env' => 'development',
+    'env' => env('APP_ENV', 'development'),
 
     /*
     |--------------------------------------------------------------------------
@@ -53,7 +53,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,5 +69,7 @@ return [
     'providers' => [
         App\Providers\AppServiceProvider::class,
     ],
+
+    'max_output_line_chars' => env('APP_MAX_OUTPUT_LINE_CHARS', 80),
 
 ];

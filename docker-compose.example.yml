@@ -1,8 +1,7 @@
 version: "3.7"
 
 x-php-defaults: &php-defaults
-  #build: ./build/php-fpm
-  image: hub.jcdev.net:24000/php8.2-fpm-buster:8.2.3
+  build: ./build/php
   cap_add:
     - SYS_PTRACE
   security_opt:
@@ -26,3 +25,4 @@ services:
       PHP_XDEBUG_ENABLED: ${PHP_XDEBUG_ENABLED}
       XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
       PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+    network_mode: "host"
