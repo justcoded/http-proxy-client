@@ -76,10 +76,10 @@ class WebhookProxy
         $port = $this->port ? ":{$this->port}" : '';
         $appKey = config('whp.socket.app_key');
 
-        $protocol = config('whp.socket.protocol');
-        $client = config('whp.socket.client');
+        $protocol = config('whp.socket.protocol_version');
+        $client = config('whp.socket.client_name');
         $version = config('whp.socket.version');
-        $flash = config('whp.socket.flash');
+        $flash = 'false';
 
         return "{$scheme}://{$this->host}{$port}/app/{$appKey}?protocol={$protocol}&client={$client}&version={$version}&flash={$flash}";
     }

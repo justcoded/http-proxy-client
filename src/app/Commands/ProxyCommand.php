@@ -55,28 +55,34 @@ class ProxyCommand extends Command
             return;
         }
 
-        View::render('command.proxy.start', compact('channelUuid', 'forwardUrl', 'webhookUrl'));
+        View::render(
+            'command.proxy.start',
+            compact('channelUuid', 'forwardUrl', 'webhookUrl'),
+        );
 
         $this
             ->connect($this->webhookProxy->websocketUrl())
-            ->then(function (WebSocket $connection) use ($channelUuid, $forwardUrl) {
-                $pusher = new PusherApi($connection);
-                $channel = rtrim(config('whp.socket.channel_basename'), '.') . '.' . $channelUuid;
+            ->then(
+                onFulfilled: function (WebSocket $connection) use ($channelUuid, $forwardUrl) {
+                    $pusher = new PusherApi($connection);
+                    $channel = rtrim(config('whp.socket.channel_basename'), '.') . '.' . $channelUuid;
 
-                $pusher->subscribe($channel);
+                    $pusher->subscribe($channel);
 
-                $connection->on('error', $this->onError());
-                $connection->on('close', $this->onClose());
+                    $connection->on('error', $this->onError());
+                    $connection->on('close', $this->onClose());
 
-                $connection->on('message', $this->onMessage($forwardUrl));
+                    $connection->on('message', $this->onMessage($forwardUrl));
 
-                $this->loop->addPeriodicTimer(
-                    max(config('whp.socket.timeout') - 1, 1),
-                    static fn() => $pusher->ping($channel),
-                );
-            }, function (Throwable $e) {
-                $this->error('Could not connect: ' . $e->getMessage());
-            });
+                    $this->loop->addPeriodicTimer(
+                        max(config('whp.socket.timeout') - 1, 1),
+                        static fn() => $pusher->ping($channel),
+                    );
+                },
+                onRejected: function (Throwable $e) {
+                    $this->error('Could not connect: ' . $e->getMessage());
+                },
+            );
 
         $this->loop->run();
     }
