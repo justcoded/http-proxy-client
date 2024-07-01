@@ -23,7 +23,6 @@ class ProxyCommand extends Command
     protected $signature = 'proxy {--channel=} {--forward-url=}';
 
     public function __construct(
-        protected LoopInterface $loop,
         protected WebhookProxy $webhookProxy,
     ) {
         parent::__construct();
@@ -31,6 +30,10 @@ class ProxyCommand extends Command
 
     protected function getLoop(): LoopInterface
     {
+        if (! isset($this->loop)) {
+            $this->loop = app(LoopInterface::class);
+        }
+
         return $this->loop;
     }
 
