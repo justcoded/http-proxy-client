@@ -50,6 +50,7 @@ class WebhookProxy
     protected function ensureValidUuid(string $channelUuid): void
     {
         $uuidRegex = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
+
         if (! preg_match($uuidRegex, $channelUuid)) {
             throw new InvalidArgumentException('Invalid channel UUID provided.');
         }
@@ -79,7 +80,7 @@ class WebhookProxy
         $protocol = config('whp.socket.protocol_version');
         $client = config('whp.socket.client_name');
         $version = config('whp.socket.version');
-        $flash = 'false';
+        $flash = is_string($flash = config('whp.socket.flash')) ? $flash : ($flash ? 'true' : 'false');
 
         return "{$scheme}://{$this->host}{$port}/app/{$appKey}?protocol={$protocol}&client={$client}&version={$version}&flash={$flash}";
     }
