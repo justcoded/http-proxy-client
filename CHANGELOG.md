@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 <!--- END HEADER -->
 
-## [0.1.0](https://bitbucket.org/justcoded/service-webhooks-proxy-client/compare/481eadef96aa8be3ae42a728c97532dab2c7a9e7...v0.1.0) (2023-06-07)
+## [0.1.0](https://bitbucket.org/justcoded/service-webhooks-proxy-client/compare/481eadef96aa8be3ae42a728c97532dab2c7a9e7...v0.1.0) (2023-07-01)
 ### Features
 
 ##### Webhook Proxy Forwarder
