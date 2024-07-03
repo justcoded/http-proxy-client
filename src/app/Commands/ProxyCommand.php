@@ -41,6 +41,12 @@ class ProxyCommand extends Command
     {
         $channelIdentifier = $this->option('channel') ?? $this->ask('Enter the channel UUID or webhook URL:');
 
+        if (empty($channelIdentifier)) {
+            $this->error('The channel identifier is required');
+
+            return;
+        }
+
         try {
             $channelUuid = $this->webhookProxy->parseChannelUuid($channelIdentifier);
         } catch (InvalidArgumentException $e) {
@@ -50,6 +56,13 @@ class ProxyCommand extends Command
         }
 
         $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+
+        if (empty($forwardUrl)) {
+            $this->error('The forward URL is required');
+
+            return;
+        }
+
         $webhookUrl = $this->webhookProxy->webhookUrl($channelUuid);
 
         if ($forwardUrl === $this->webhookProxy->webhookUrl($channelUuid)) {

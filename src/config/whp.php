@@ -5,7 +5,7 @@ return [
     'host' => env('WHP_HOST', 'request-proxy.dev-net.co'),
     'port' => env('WHP_PORT'),
     'socket' => [
-        'app_key' => env('WHP_APP_KEY', 'whp_CyJUXvwTEVGxvDKg'),
+        'app_key' => env('WHP_APP_KEY'),
         'timeout' => env('WHP_SOCKET_TIMEOUT', 20),
         'channel_basename' => env('WHP_SOCKET_CHANNEL_BASENAME', 'App.Webhooks'),
         'verify_ssl' => env('WHP_SOCKET_VERIFY_SSL', true),
