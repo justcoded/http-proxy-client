@@ -74,8 +74,13 @@ update:
 build:
 	docker-compose build
 
-run: xdebug-init
-	${DOCKER_COMPOSE_RUN} app bash -c "/var/www/html/whp --channel-uuid=$(channel) --forward-url=$(url)"
+build.whp:
+	${DOCKER_COMPOSE_EXEC_WWW} app bash -c "./whp app:build"
+	docker compose build whp
+
+run: up
+up:
+	docker compose up -d
 
 xdebug-init:
 	@if [ $$USER = 'vagrant' ]; then \
@@ -104,3 +109,6 @@ chl-first:
 	${CONV_CHL_DR} \
 		-c "${CONV_CHL_CMD} --first-release"
 
+
+ssh:
+	${DOCKER_COMPOSE_EXEC_WWW} app bash

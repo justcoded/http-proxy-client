@@ -37,7 +37,7 @@ trait ForwardsProxyWebhooks
             $timestamp = Carbon::now()->setTimezone($tz)->toDateTimeString();
             render("<h2 class='font-bold italic text-center text-lime-500'>Webhook received: {$timestamp} ({$tz})</h2>");
 
-            $requestData = RequestData::fromRaw($data->request);
+            $requestData = RequestData::fromRaw((array) $data->request);
             $start = microtime(true);
             $response = RequestForwarder::make($data->request)->forward($forwardUrl);
             $forwardedInSeconds = round(microtime(true) - $start, 3) . 's';

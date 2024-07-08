@@ -15,6 +15,7 @@ use Illuminate\Console\Command;
 use InvalidArgumentException;
 use React\EventLoop\LoopInterface;
 use Throwable;
+use function Laravel\Prompts\text;
 
 class ProxyCommand extends Command
 {
@@ -39,13 +40,10 @@ class ProxyCommand extends Command
 
     public function handle(): void
     {
-        $channelIdentifier = $this->option('channel') ?? $this->ask('Enter the channel UUID or webhook URL:');
-
-        if (empty($channelIdentifier)) {
-            $this->error('The channel identifier is required');
-
-            return;
-        }
+        $channelIdentifier = $this->option('channel') ?? text(
+            'Enter the channel UUID or webhook URL:',
+            required: true,
+        );
 
         try {
             $channelUuid = $this->webhookProxy->parseChannelUuid($channelIdentifier);
@@ -55,7 +53,7 @@ class ProxyCommand extends Command
             return;
         }
 
-        $forwardUrl = $this->option('forward-url') ?? $this->ask('Enter the URL to forward to:');
+        $forwardUrl = $this->option('forward-url') ?? text('Enter the URL to forward to:');
 
         if (empty($forwardUrl)) {
             $this->error('The forward URL is required');

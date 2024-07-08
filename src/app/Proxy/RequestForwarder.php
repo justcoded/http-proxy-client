@@ -16,9 +16,11 @@ class RequestForwarder
 {
     protected RequestData $payload;
 
+    protected Client $httpClient;
+
     public function __construct(object $request)
     {
-       $contentType = $request->headers->{'content-type'}[0] ?? 'application/json';
+        $contentType = $request->headers->{'content-type'}[0] ?? 'application/json';
 
         $body = str_contains($contentType, 'text') && isset($request->body->raw)
             ? $request->body->raw
@@ -27,8 +29,13 @@ class RequestForwarder
         $this->payload = new RequestData(
             $request->method,
             $body,
-            (array) $request->headers
+            (array) $request->query,
+            (array) $request->headers,
         );
+
+        $this->httpClient = new Client([
+            'verify' => false,
+        ]);
     }
 
     public static function make(object $request): static
@@ -38,10 +45,10 @@ class RequestForwarder
 
     public function forward(string $url): ResponseInterface
     {
-        $client = new Client();
-
         try {
-            return $client->send($this->payload->toRequest($url));
+            return $this->httpClient->send($this->payload->toRequest($url), [
+                'query' => $this->payload->query,
+            ]);
         } catch (RequestException|ProviderException|BadResponseException $e) {
             return $e->getResponse() ?? new Response(status: 500, body: $e->getMessage());
         } catch (GuzzleException $e) {
